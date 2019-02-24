@@ -1,12 +1,14 @@
-package com.hussein.imageloaderlibrary.imageload
+package com.hussein.imageload.imagecache
 
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
+import com.hussein.imageload.R
 import com.hussein.imageloaderlibrary.FileCache
-import com.hussein.imageloaderlibrary.R
+import com.hussein.imageloaderlibrary.imageload.MemoryCache
+import com.hussein.imageloaderlibrary.imageload.Utils
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -18,22 +20,13 @@ import java.util.WeakHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class ImageLoader/*private static ImageLoader instance;
-    public static ImageLoader getInstance(Context context)
-    {
-        if (instance == null){ //if there is no instance available... create new one
-            instance = new ImageLoader(context);
-        }
-
-        return instance;
-    }*/
-    (context: Context) {
+class ImageLoader(context: Context) {
     internal var memoryCache = MemoryCache()
     internal var fileCache: FileCache? = null
     private val imageViews = Collections.synchronizedMap(WeakHashMap<ImageView, String>())
     internal var executorService: ExecutorService? = null
 
-    internal val stub_id = R.mipmap.ic_launcher
+    internal val stub_id = R.drawable.ic_photo
 
     init {
         fileCache = FileCache(context)
@@ -41,7 +34,7 @@ class ImageLoader/*private static ImageLoader instance;
     }
 
     fun DisplayImage(url: String, imageView: ImageView) {
-        imageViews[imageView] = url
+        imageViews.put(imageView,url)
         val bitmap = memoryCache.get(url)
         if (bitmap != null)
             imageView.setImageBitmap(bitmap)
@@ -64,7 +57,7 @@ class ImageLoader/*private static ImageLoader instance;
         if (b != null)
             return b
         try {
-            var bitmap: Bitmap? = null
+            val bitmap: Bitmap = this.decodeFile(f)!!
             val imageUrl = URL(url)
             val conn = imageUrl.openConnection() as HttpURLConnection
             conn.connectTimeout = 30000
@@ -74,7 +67,6 @@ class ImageLoader/*private static ImageLoader instance;
             val os = FileOutputStream(f)
             Utils.CopyStream(`is`, os)
             os.close()
-            bitmap = decodeFile(f)
             return bitmap
         } catch (ex: Throwable) {
             ex.printStackTrace()
