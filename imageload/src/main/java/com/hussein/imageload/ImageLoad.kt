@@ -13,7 +13,10 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Suppress("NAME_SHADOWING")
-class ImageLoad{
+class ImageLoad(context: Context){
+    init {
+        setCache(DoubleCache(context))
+    }
     companion object {
         private lateinit var cache: ImageCache
         private var executorService: ExecutorService =
@@ -24,8 +27,7 @@ class ImageLoad{
             this.cache = cache
         }
 
-        fun displayImage(context:Context,url: String, imageView: ImageView) {
-            setCache(DoubleCache(context))
+        fun displayImage(url: String, imageView: ImageView) {
             val cached = cache.get(url)
             if (cached != null) {
                 updateImageView(imageView, cached)
