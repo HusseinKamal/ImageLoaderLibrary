@@ -12,7 +12,7 @@ class FileCache(context: Context) {
     init {
         //Find the dir to save cached images
         if (android.os.Environment.getExternalStorageState() == Environment.DIRECTORY_PICTURES)
-            cacheDir = File(android.os.Environment.getExternalStorageDirectory(), "TTImages_cache")
+            cacheDir = File(android.os.Environment.getExternalStorageDirectory(), context.resources.getString(R.string.app_name))
         else
             cacheDir = context.cacheDir
         if (!cacheDir!!.exists())
