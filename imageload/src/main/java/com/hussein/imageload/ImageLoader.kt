@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Suppress("NAME_SHADOWING")
-class ImageLoader/*(context: Context) */{
-   /* internal var memoryCache = MemoryCache()
+class ImageLoader(context: Context) {
+    internal var memoryCache = MemoryCache()
     internal var fileCache: FileCache? = null
     private val imageViews = Collections.synchronizedMap(WeakHashMap<ImageView, String>())
-    internal var executorService: ExecutorService? = null
+    private var executorService: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
 
     internal val stub_id = R.drawable.ic_photo
 
@@ -46,7 +46,7 @@ class ImageLoader/*(context: Context) */{
 
     private fun queuePhoto(url: String, imageView: ImageView) {
         val p = PhotoToLoad(url, imageView)
-        executorService!!.submit(PhotosLoader(p))
+        executorService.submit(PhotosLoader(p))
     }
 
     private fun getBitmap(url: String): Bitmap? {
@@ -146,9 +146,7 @@ class ImageLoader/*(context: Context) */{
         memoryCache.clear()
         fileCache!!.clear()
     }
-*/
    private var imageCache: LruCache<String, Bitmap>
-    private var executorService: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
     private val uiHandler: Handler = Handler(Looper.getMainLooper())
 
     init {
