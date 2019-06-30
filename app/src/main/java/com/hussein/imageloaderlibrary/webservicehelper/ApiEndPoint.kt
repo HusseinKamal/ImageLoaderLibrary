@@ -1,6 +1,8 @@
 package com.hussein.imageloaderlibrary.webservicehelper
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import dagger.Module
+import dagger.Provides
 import okhttp3.CipherSuite
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
@@ -9,7 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
+@Module
 class ApiEndPoint {
     companion object {
         private var objRetrofit: Retrofit? = null
@@ -31,23 +35,27 @@ class ApiEndPoint {
                 CipherSuite.TLS_DHE_RSA_WITH_AES_256_CBC_SHA
             )
             .build()
-        val client: Retrofit?
-            get() {
-                val okHttpClient = OkHttpClient().newBuilder()
-                    .connectTimeout(300, TimeUnit.SECONDS)
-                    .readTimeout(300, TimeUnit.SECONDS)
-                    .writeTimeout(300, TimeUnit.SECONDS)
-                    .connectionSpecs(Collections.singletonList(spec))
-                    .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
-                    .build()
-                objRetrofit = Retrofit.Builder()
-                    .baseUrl("http://pastebin.com/")
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
 
-                return objRetrofit
-            }
+        @Singleton
+        @Provides
+        fun client(): Retrofit? {
+
+            val okHttpClient = OkHttpClient().newBuilder()
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(300, TimeUnit.SECONDS)
+                .writeTimeout(300, TimeUnit.SECONDS)
+                .connectionSpecs(Collections.singletonList(spec))
+                .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
+                .build()
+            objRetrofit = Retrofit.Builder()
+                .baseUrl("http://pastebin.com/")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+
+            return objRetrofit
+
+        }
     }
 }

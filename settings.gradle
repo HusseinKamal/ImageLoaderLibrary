@@ -1,1 +1,1 @@
-include ':app', ':imageload', ':demolibrary'
+include ':app', ':imageload'

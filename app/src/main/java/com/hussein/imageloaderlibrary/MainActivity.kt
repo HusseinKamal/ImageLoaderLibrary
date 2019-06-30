@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.layout_no_data.*
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,IDataPresenter{
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var adapter: ImageAdapter
+    companion object {
+        lateinit var adapter: ImageAdapter
+    }
     private lateinit var presenter:ImagesPresenter
 
     override fun onRefresh() {
@@ -147,7 +149,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,I
     private fun fillData(images:List<Image>){
         try {
             rvImage.layoutManager = linearLayoutManager
-            rvImage.adapter = ImageAdapter(this, images)
+            adapter=ImageAdapter(this, images)
+            rvImage.adapter =adapter
             pbarLoad.visibility=View.GONE
             rvImage.visibility=View.VISIBLE
             lyNoData.visibility=View.GONE

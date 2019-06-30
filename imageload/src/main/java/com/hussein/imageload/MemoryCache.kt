@@ -1,42 +1,15 @@
 package com.hussein.imageload
 
-import android.graphics.Bitmap
-import android.util.Log
-import android.util.LruCache
-
 import java.util.Collections
 import java.util.LinkedHashMap
+import android.graphics.Bitmap
+import android.util.Log
 
-class MemoryCache : ImageCache {
-    private val cache: LruCache<String, Bitmap>
-    init {
-        val maxMemory: Long = Runtime.getRuntime().maxMemory() / 1024
-        val cacheSize: Int = (maxMemory / 4).toInt()
-
-        cache = object : LruCache<String, Bitmap>(cacheSize) {
-            override fun sizeOf(key: String?, bitmap: Bitmap?): Int {
-                return (bitmap?.rowBytes ?: 0) * (bitmap?.height ?: 0) / 1024
-            }
-        }
-    }
-
-    override fun put(url: String, bitmap: Bitmap) {
-        cache.put(url, bitmap)
-    }
-
-    override fun get(url: String): Bitmap? {
-        return cache.get(url)
-    }
-
-    override fun clear() {
-        cache.evictAll()
-    }
-
-  /*  private val cache = Collections.synchronizedMap(
+class MemoryCache {
+    private val cache = Collections.synchronizedMap(
         LinkedHashMap<String, Bitmap>(10, 1.5f, true)
     )//Last argument true for LRU ordering
     private var size: Long = 0//current allocated size
-
     private var limit: Long = 1000000//max memory in bytes
 
     init {
@@ -64,7 +37,7 @@ class MemoryCache : ImageCache {
         try {
             if (cache.containsKey(id))
                 size -= getSizeInBytes(cache[id])
-            cache.put(id,bitmap)
+            cache[id] = bitmap
             size += getSizeInBytes(bitmap)
             checkSize()
         } catch (th: Throwable) {
@@ -104,7 +77,7 @@ class MemoryCache : ImageCache {
     }
 
     companion object {
-        private val TAG = "MemoryCache"
-    }*/
 
+        private val TAG = "MemoryCache"
+    }
 }

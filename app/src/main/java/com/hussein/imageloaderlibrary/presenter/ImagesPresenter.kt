@@ -15,7 +15,7 @@ class ImagesPresenter (mListener:IDataPresenter)
 
     fun loadDataImages() {
         try {
-            val objApiEndpointInterface = ApiEndPoint.client!!.create(
+            val objApiEndpointInterface = ApiEndPoint.client()!!.create(
                 ApiEndpointInterface::class.java)
             objApiEndpointInterface.getImagesData()
                 .subscribeOn(Schedulers.io())
